@@ -4,25 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.widget.Toast
-import com.opencsv.CSVReader
-import android.os.Environment.getExternalStorageDirectory
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_home.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
-import java.io.File
-import java.io.FileReader
 
 
 class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCallbackInterface {
@@ -40,6 +31,8 @@ class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCall
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         thisContext = this
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setIcon(R.drawable.ic_directions_car_white_24dp)
 
 
         linearLayoutManager = LinearLayoutManager(thisContext)
@@ -109,6 +102,32 @@ class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCall
         VolleySingleton.instance?.addToRequestQueue(stringRequest)//adding request to queue
         //volley interactions end
 
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when (item.itemId) {
+            R.id.action_about_us->{
+                aboutUsDialog()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun aboutUsDialog() {
+        ClassAlertDialog(thisContext).alertMessage("This is a mini App project that get the US car Owners over several years" +
+                "\n\nDeveloped by Nelson Chinedu Odo. I develop robust, dynamic & responsible Web/Android applications using Kotlin","About Us")
     }
 
 
