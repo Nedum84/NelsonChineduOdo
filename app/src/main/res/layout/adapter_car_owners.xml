@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:id="@+id/ownerWrapper"
+    android:background="@drawable/design_border_radius_grey"
+    android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/ownerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EMEKA, Jude C."
+        android:padding="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:padding="3dp"
+            app:srcCompat="@drawable/ic_email_grey_24dp"
+            tools:ignore="ContentDescription"/>
+        <TextView
+            android:id="@+id/ownerEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="emekapaul@gmail.com"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#a1a1a1"
+            android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp" />
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:padding="3dp"
+            app:srcCompat="@drawable/ic_perm_contact_calendar_black_24dp"
+            tools:ignore="ContentDescription"/>
+        <TextView
+            android:id="@+id/ownerGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="male"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#a1a1a1"
+            android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/ownerCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="China"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textColor="@color/colorDarkBlue"
+        android:padding="4dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorAshBg"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+            <com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:shape_dot_radius="2dp"
+                app:shape_dot_spacing="1dp"
+                app:shape_edge_position="right"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Job:"
+                    android:background="#33DFE3E6"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="2dp"/>
+
+            </com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView>
+
+            <TextView
+                android:id="@+id/ownerJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carpenter"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="4dp">
+            <com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:shape_dot_radius="2dp"
+                app:shape_dot_spacing="1dp"
+                app:shape_edge_position="right"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Car detail:"
+                    android:background="#33DFE3E6"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="2dp"/>
+
+            </com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView>
+
+            <TextView
+                android:id="@+id/ownerCarDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green Lexus Car(1996)"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="1dp">
+            <com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:shape_dot_radius="2dp"
+                app:shape_dot_spacing="1dp"
+                app:shape_edge_position="right"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bio:"
+                    android:background="#33DFE3E6"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="2dp"/>
+
+            </com.github.florent37.shapeofview.shapes.DottedEdgesCutCornerView>
+
+            <TextView
+                android:id="@+id/ownerBio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="A good buy from noyway and also troubsome in all his ways because he is too proud of everythung he puts his hands and also very wwahalashi..."
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/ownerBioReadMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read more"
+                android:textColor="@color/colorGreen"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

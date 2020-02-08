@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:id="@+id/filterWrapper"
+    android:background="@drawable/design_border_radius_grey"
+    android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/filterYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Between 1990 - 2012"
+        android:padding="4dp"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:padding="3dp"
+            app:srcCompat="@drawable/ic_perm_contact_calendar_black_24dp"
+            tools:ignore="ContentDescription"/>
+        <TextView
+            android:id="@+id/filterGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#a1a1a1"
+            android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorAshBg"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:layout_width="84dp"
+                    android:layout_height="wrap_content"
+                    android:text="Colors:"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/filterColors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Green, Violet, Yellow, pink"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:textColor="#555"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#e3efe3"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="1dp">
+                <TextView
+                    android:layout_width="84dp"
+                    android:layout_height="wrap_content"
+                    android:text="Countries:"
+                    android:textColor="@color/colorDarkBlue"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/filterCountries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="d, Nigeria, Cameroon, Chad, Nigeria, Cameroon, Chad, Nigeria, Cameroon, Chad, Nigeria, Cameroon, Chad, Egypt..."
+                    android:textColor="#555"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_keyboard_arrow_right_grey_24dp"
+            tools:ignore="ContentDescription"/>
+
+    </LinearLayout>
+</LinearLayout>
