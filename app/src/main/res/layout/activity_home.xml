@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:textColor="#212121"
         android:gravity="center_horizontal"
-        android:text="US Car owners over the years"/>
+        android:text="US Car owners over several years"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:textSize="14sp"
         android:textColor="#777"
         android:gravity="center_horizontal"
-        android:text="Click on each to view owners"/>
+        android:text="Click to view owners under each filter"/>
 
 
     <View

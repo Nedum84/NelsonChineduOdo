@@ -55,30 +55,39 @@ class CarFilterAdapter(items:MutableList<CarFiltersClassBinder>, ctx: Context): 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val listDetails = list[position]
 
-        holder.filterYear.text     = "Between ${listDetails.start_year}-${listDetails.end_year}"
-        holder.filterGender.text = if(listDetails.gender!!.isNotEmpty())"${listDetails.gender}" else "not set"
+        holder.filterYear.text     = "Between ${listDetails.start_year} - ${listDetails.end_year}"
+        holder.filterGender.text = if(listDetails.gender!!.isNotEmpty())"${listDetails.gender}" else "both male & female"
 
 
         //Colors
         if(listDetails.colors!!.length()>0){
-            var colors = ""
+            val colorsArray = mutableListOf<String>()
+            var colorsString = ""
             for(c in 0 until listDetails.colors.length()){
-                colors += listDetails.colors[c]
-                if (c!=listDetails.colors.length()) colors +=","
+                val cl = listDetails.colors[c]
+                if(cl in colorsArray)continue
+
+                colorsArray.add("$cl")
+                colorsString += "$cl, "
             }
-            holder.filterColors.text     = colors
+            holder.filterColors.text     = colorsString.substring(0, colorsString.length - 2)
+
         }else{
             holder.filterColors.text     = "ALL"
         }
 
         //Countries
         if(listDetails.countries!!.length()>0){
-            var countries = ""
+            val countriesArray = mutableListOf<String>()
+            var countriesString = ""
             for(c in 0 until listDetails.countries.length()){
-                countries += listDetails.countries[c]
-                if (c!=listDetails.countries.length())countries +=","
+                val co = listDetails.countries[c]
+                if(co in countriesArray)continue
+
+                countriesArray.add("$co")
+                countriesString += "$co, "
             }
-            holder.filterCountries.text     = countries
+            holder.filterCountries.text     = countriesString.substring(0, countriesString.length - 2)
         }else{
             holder.filterCountries.text     = "ALL"
         }
@@ -153,10 +162,10 @@ class CarOwnerAdapter(var list:MutableList<CarOwnersClassBinder>, val context: C
 
         holder.ownerName.text     = "${listDetails.first_name?.toUpperCase()} ${listDetails.last_name}"
         holder.ownerEmail.text     = "${listDetails.email}"
-        holder.ownerGender.text = "${listDetails.gender?.toLowerCase()} === ${listDetails.id}"
+        holder.ownerGender.text = "${listDetails.gender?.toLowerCase()} "
         holder.ownerCountry.text     = "${listDetails.country?.toUpperCase()}"
         holder.ownerJob.text     = "${listDetails.job_title}"
-        holder.ownerCarDetail.text     = "${listDetails.car_color} ${listDetails.car_model} car(${listDetails.car_model_year})"
+        holder.ownerCarDetail.text     = "${listDetails.car_color} ${listDetails.car_model} Car(${listDetails.car_model_year})"
         holder.ownerBio.text     = "${listDetails.bio}"
 
         holder.ownerBioReadMore.setOnClickListener {
