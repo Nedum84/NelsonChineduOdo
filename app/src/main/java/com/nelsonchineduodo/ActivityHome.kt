@@ -4,25 +4,20 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.widget.Toast
-import com.opencsv.CSVReader
-import android.os.Environment.getExternalStorageDirectory
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_home.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
-import java.io.File
-import java.io.FileReader
+import java.security.SecureRandom
+import javax.net.ssl.*
+import java.security.cert.X509Certificate
 
 
 class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCallbackInterface {
@@ -40,20 +35,24 @@ class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCall
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         thisContext = this
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setIcon(R.drawable.ic_directions_car_white_24dp)
+        supportActionBar?.title = " US Car Owners"
+        NukeSSLCerts.nuke()
 
 
         linearLayoutManager = LinearLayoutManager(thisContext)
         ADAPTER = CarFilterAdapter(carFilterList,thisContext)
-        car_filter_recyclerview.layoutManager = linearLayoutManager
-        car_filter_recyclerview.itemAnimator = DefaultItemAnimator()
-        car_filter_recyclerview.adapter = ADAPTER
+        car_filter_recyclerview?.layoutManager = linearLayoutManager
+        car_filter_recyclerview?.itemAnimator = DefaultItemAnimator()
+        car_filter_recyclerview?.adapter = ADAPTER
         loadCarFilters()
 
 
 
 
 
-        tapToRetry.setOnClickListener {
+        tapToRetry?.setOnClickListener {
             refreshList()
         }
     }
@@ -101,14 +100,46 @@ class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCall
                         ClassAlertDialog(thisContext).toast("Error occurred, try again...")
                     }
                 },
-                Response.ErrorListener { _ ->
+                Response.ErrorListener { vError ->
                     loadingProgressbar?.visibility = View.GONE
                     no_network_tag?.visibility = View.VISIBLE
-                }) {}
+                }) {
+
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                headers["Content-Type"] = "application/json"
+                return headers
+            }
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
 
         VolleySingleton.instance?.addToRequestQueue(stringRequest)//adding request to queue
         //volley interactions end
 
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_about_us->{
+                aboutUsDialog()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun aboutUsDialog() {
+        ClassAlertDialog(thisContext).alertMessage("This is a mini App project that uses GET API to fetch  US car Owners over several years..." +
+                "\n\nDeveloped by Nelson Chinedu Odo. I develop robust, dynamic & responsible Android applications using Kotlin :)","About Us")
     }
 
 
@@ -118,4 +149,34 @@ class ActivityHome : AppCompatActivity() , CarFilterAdapter.CarFilterAdapterCall
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
     }
 
+}
+
+object NukeSSLCerts {
+    internal val TAG = "NukeSSLCerts"
+
+    fun nuke() {
+        try {
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun getAcceptedIssuers(): Array<X509Certificate?> {
+                    val myTrustedAnchors = arrayOfNulls<X509Certificate>(0)
+                    return myTrustedAnchors
+                }
+
+                override fun checkClientTrusted(certs: Array<X509Certificate>, authType: String) {}
+
+                override fun checkServerTrusted(certs: Array<X509Certificate>, authType: String) {}
+            })
+
+            val sc = SSLContext.getInstance("SSL")
+            sc.init(null, trustAllCerts, SecureRandom())
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier(object : HostnameVerifier {
+                override fun verify(arg0: String, arg1: SSLSession): Boolean {
+                    return true
+                }
+            })
+        } catch (e: Exception) {
+        }
+
+    }
 }

@@ -1,12 +1,19 @@
 package com.nelsonchineduodo
 
+import android.Manifest
 import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +21,7 @@ import com.google.gson.Gson
 import com.opencsv.CSVReader
 import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_car_owners.*
+import java.io.File
 import java.io.FileReader
 
 class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterCallbackInterface {
@@ -41,26 +49,40 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
         Slidr.attach(this)//for slidr swipe lib
         prefs = ClassSharedPreferences(thisContext)
         progressDialog = ClassProgressDialog(thisContext,"Loading Car Owners, Please wait...")
-        progressDialog.createDialog()
 
         filterDetails = Gson().fromJson(prefs.getCarFilterJSONDetails(), Array<CarFiltersClassBinder>::class.java).asList()[0]
-        supportActionBar?.title = "Us Car Owners"
+        supportActionBar?.title = "US Car Owners"
         supportActionBar?.subtitle = "Between ${filterDetails.start_year}-${filterDetails.end_year}"
 
 
 
         linearLayoutManager = LinearLayoutManager(thisContext)
         ADAPTER = CarOwnerAdapter(carOwnerList,thisContext)
-        car_owners_recyclerview.layoutManager = linearLayoutManager
-        car_owners_recyclerview.itemAnimator = DefaultItemAnimator()
-        car_owners_recyclerview.adapter = ADAPTER
-        LoadCarOwners().execute()
+        car_owners_recyclerview?.layoutManager = linearLayoutManager
+        car_owners_recyclerview?.itemAnimator = DefaultItemAnimator()
+        car_owners_recyclerview?.adapter = ADAPTER
+        if (Build.VERSION.SDK_INT >= 23 && ActivityCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(thisContext, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
+        } else {
+            FilterCarOwners().execute()
+        }
 
         clickAndScrollEvents()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 0) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                FilterCarOwners().execute()
+            }else{
+                ClassAlertDialog(thisContext).toast("You must allow permission in order to proceed...")
+                super.onBackPressed()
+            }
+        }
+    }
     private fun clickAndScrollEvents() {
-        goBack.setOnClickListener {
+        goBack?.setOnClickListener {
             super.onBackPressed()
         }
 
@@ -71,11 +93,11 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
                 // only load more items if it's currently not loading
                 if (!isLoadingDataFromFile) {
                     if(!recyclerView.canScrollVertically(1)){//1->bottom, -1 ->top
-                        loadingProgressbar.visibility = View.GONE
+                        loadingProgressbar?.visibility = View.VISIBLE
                         isLoadingDataFromFile = true
                         start_page_from = (carOwnerList.map {it.id!!.toInt()}.toMutableList()).sorted().first()
 
-                        LoadCarOwners().execute()//loading questions again
+                        FilterCarOwners().execute()//loading questions again
                     }
                 }
             }
@@ -83,13 +105,32 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
     }
 
 
-    inner class LoadCarOwners : AsyncTask<Void, Int, MutableList<CarOwnersClassBinder>>(){
+    inner class FilterCarOwners : AsyncTask<Void, Int, MutableList<CarOwnersClassBinder>?>(){
+        private val fileExtStoragePath = Environment.getExternalStorageDirectory().absolutePath + "/venten/car_ownsers_data.csv"
+        private val fileIntStoragePath =  Environment.getDataDirectory().absolutePath+ "/venten/car_ownsers_data.csv"
+        private val fileIntStoragePath2 =  "/sdcard/venten/car_ownsers_data.csv"
+        private val fileIntStoragePath3 =  "/storage/emulated/0/venten/car_ownsers_data.csv"
+        private var csvFilePath:String? = ""
 
 
+        override fun onPreExecute() {
+            super.onPreExecute()
+//            progressDialog.createDialog()
+        }
         override fun doInBackground(vararg params: Void): MutableList<CarOwnersClassBinder>?{
-            var counter = 0
 
-            val csvFilePath = Environment.getExternalStorageDirectory().toString() + "/venten/car_ownsers_data.csv"
+            if(File(fileExtStoragePath).exists()){
+                csvFilePath = fileExtStoragePath
+            }else if(File(fileIntStoragePath).exists()){
+                csvFilePath = fileIntStoragePath
+            }else if(File(fileIntStoragePath2).exists()){
+                csvFilePath = fileIntStoragePath2
+            }else if(File(fileIntStoragePath3).exists()){
+                csvFilePath = fileIntStoragePath3
+            }else{
+                return null
+            }
+
             val fiveOwners = mutableListOf<CarOwnersClassBinder>()
 
 
@@ -98,8 +139,6 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
                 var readLine = csvReader.readNext()
 
                 while (readLine != null) {
-                    counter++
-                    onProgressUpdate(counter)
 
                     if(readLine[0]=="id"){readLine = csvReader.readNext();continue}//Remove the first row...
 
@@ -169,31 +208,37 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                no_data_wrapper.visibility = View.VISIBLE
-                no_data_info.text = "The specified file was not found"
+                return null
             }
 
 
             return fiveOwners
         }
 
+
         override fun onProgressUpdate(vararg values: Int?) {
             super.onProgressUpdate(*values)
 //            progressDialog.updateMsg("Loading..."+values[0]!!*100/5+"% done")
         }
 
-        override fun onPostExecute(carOwners:MutableList<CarOwnersClassBinder>){
+        override fun onPostExecute(carOwners:MutableList<CarOwnersClassBinder>?){
             try {progressDialog.dismissDialog()} catch (e: Exception) {}
-            loadingProgressbar.visibility = View.GONE
+            loadingProgressbar?.visibility = View.GONE
             isLoadingDataFromFile = false
 
-            if(carOwners.size==0){
-                no_data_wrapper.visibility = View.VISIBLE
-                no_data_info.text = "Search result not found"
-
-            }else{
-                no_data_wrapper.visibility = View.GONE
-                ADAPTER.addItems(carOwners)
+            when {
+                carOwners==null -> {
+                    no_data_wrapper?.visibility = View.VISIBLE
+                    no_data_info?.text = "The car filter list is missing on your device"
+                }
+                carOwners.size==0 -> {
+                    no_data_wrapper?.visibility = View.VISIBLE
+                    no_data_info?.text = "Search result not found"
+                }
+                else -> {
+                    no_data_wrapper?.visibility = View.GONE
+                    ADAPTER.addItems(carOwners)
+                }
             }
 
         }

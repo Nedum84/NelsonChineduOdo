@@ -23,6 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    android {
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+    }
 }
 
 dependencies {
@@ -38,13 +44,6 @@ dependencies {
 
     //volley
     implementation 'com.android.volley:volley:1.1.1'
-    //Glide
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation 'com.github.bumptech.glide:annotations:4.9.0'
-    kapt "com.github.bumptech.glide:compiler:4.9.0"
-    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0"
-    //round images
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
     //slidr lib
     implementation 'com.r0adkll:slidableactivity:2.0.6'
     //shape of view
