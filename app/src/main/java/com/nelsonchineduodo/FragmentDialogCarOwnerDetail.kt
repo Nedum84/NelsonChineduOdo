@@ -61,12 +61,13 @@ class FragmentDialogCarOwnerDetail: DialogFragment(){
 
         ownerNameFull.text = "${carOwnerDetails.first_name} ${carOwnerDetails.last_name} (${carOwnerDetails.car_model_year})"
         ownerBioFull.text = "${carOwnerDetails.bio}"
-        ownerTitle.text = "${carOwnerDetails.first_name} ${carOwnerDetails.last_name}'s Bio:"
+        ownerTitle.text = "${carOwnerDetails.first_name} ${carOwnerDetails.last_name}'s Bio: "
 
     }
 
 
 
+    //Full screen and slide up panel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
