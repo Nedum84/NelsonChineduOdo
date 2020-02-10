@@ -1,12 +1,19 @@
 package com.nelsonchineduodo
 
+import android.Manifest
 import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,7 +49,6 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
         Slidr.attach(this)//for slidr swipe lib
         prefs = ClassSharedPreferences(thisContext)
         progressDialog = ClassProgressDialog(thisContext,"Loading Car Owners, Please wait...")
-        progressDialog.createDialog()
 
         filterDetails = Gson().fromJson(prefs.getCarFilterJSONDetails(), Array<CarFiltersClassBinder>::class.java).asList()[0]
         supportActionBar?.title = "US Car Owners"
@@ -55,11 +61,26 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
         car_owners_recyclerview?.layoutManager = linearLayoutManager
         car_owners_recyclerview?.itemAnimator = DefaultItemAnimator()
         car_owners_recyclerview?.adapter = ADAPTER
-        FilterCarOwners().execute()
+        if (Build.VERSION.SDK_INT >= 23 && ActivityCompat.checkSelfPermission(thisContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(thisContext, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
+        } else {
+            FilterCarOwners().execute()
+        }
 
         clickAndScrollEvents()
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 0) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                FilterCarOwners().execute()
+            }else{
+                ClassAlertDialog(thisContext).toast("You must allow permission in order to proceed...")
+                super.onBackPressed()
+            }
+        }
+    }
     private fun clickAndScrollEvents() {
         goBack?.setOnClickListener {
             super.onBackPressed()
@@ -87,10 +108,15 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
     inner class FilterCarOwners : AsyncTask<Void, Int, MutableList<CarOwnersClassBinder>?>(){
         private val fileExtStoragePath = Environment.getExternalStorageDirectory().absolutePath + "/venten/car_ownsers_data.csv"
         private val fileIntStoragePath =  Environment.getDataDirectory().absolutePath+ "/venten/car_ownsers_data.csv"
-        private val fileIntStoragePath2 =  "/storage/sdcard1/venten/car_ownsers_data.csv"
+        private val fileIntStoragePath2 =  "/sdcard/venten/car_ownsers_data.csv"
+        private val fileIntStoragePath3 =  "/storage/emulated/0/venten/car_ownsers_data.csv"
         private var csvFilePath:String? = ""
 
 
+        override fun onPreExecute() {
+            super.onPreExecute()
+//            progressDialog.createDialog()
+        }
         override fun doInBackground(vararg params: Void): MutableList<CarOwnersClassBinder>?{
 
             if(File(fileExtStoragePath).exists()){
@@ -99,6 +125,8 @@ class ActivityCarOwners : AppCompatActivity(), CarOwnerAdapter.CarOwnersAdapterC
                 csvFilePath = fileIntStoragePath
             }else if(File(fileIntStoragePath2).exists()){
                 csvFilePath = fileIntStoragePath2
+            }else if(File(fileIntStoragePath3).exists()){
+                csvFilePath = fileIntStoragePath3
             }else{
                 return null
             }

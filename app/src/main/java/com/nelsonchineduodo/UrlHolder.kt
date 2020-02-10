@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 
 
 object  UrlHolder{
-    //    private const val URL_ROOT = "http://192.168.44.236/test/"
+//        private const val URL_ROOT = "http://192.168.44.236/test/"
     private const val URL_ROOT = "https://ven10.co/assessment/"
 
 
